@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const { query } = require("express");
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -35,17 +36,48 @@ async function run() {
         const allToysCollection = client.db('ToysDB').collection('Toys');
 
         app.get('/allToys', async (req, res) => {
-            const cursor = allToysCollection.find({});
-            const result = await cursor.toArray();
+            // const cursor = allToysCollection.find({});
+            // const result = await cursor.toArray();
+            // res.send(result)
+            let query = {};
+            if (req.query?.email) {
+                query = {
+                    saller_email: req.query.email
+                }
+            }
+            const result = await allToysCollection.find(query).sort({ price: 1 }).limit(20).toArray();
             res.send(result)
 
         })
 
+        app.get('')
+
+        // app.get('/allToys', async (req, res) => {
+        //     console.log(req.query.email)
+        //     let query = {};
+        //     if (req.query.email) {
+        //         query = { email: req.query.email }
+        //     }
+        //     const result = await allToysCollection.findOne(query)
+        //     res.send(result);
+        // })
+        // app.get("/allToys", async (req, res) => {
+        //     let query = {};
+        //     if (req.query?.email) {
+        //         query = {
+        //             saller_email: req.query.email
+        //         }
+        //     }
+        //     const result = await allToysCollection.find(query).sort({ price: 1 }).limit(20).toArray();
+        //     res.send(result)
+        // });
+
+
         app.post('/addedToys', async (req, res) => {
             const addedToy = req.body;
             console.log(addedToy)
-            // const result = await allToysCollection.insertOne(addedToy);
-            // console.log(result)
+            const result = await allToysCollection.insertOne(addedToy);
+            res.send(result);
         })
 
 
