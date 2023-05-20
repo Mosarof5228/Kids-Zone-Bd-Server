@@ -76,6 +76,23 @@ async function run() {
 
 
 
+        // app.get('/categories', async (req, res) => {
+        //     const category = req.query.category
+        //     const query = { subCategory: category };
+        //     const result = await allAnimalToysCollection.find(query).toArray()
+        //     res.send(result)
+        // })
+
+
+
+        app.get('/categories', async (req, res) => {
+            const textCategory = req.query.category
+            const query = { subcategory: textCategory };
+            const result = await allToysCollection.find(query).toArray()
+            res.send(result)
+        })
+
+
         app.post('/addedToys', async (req, res) => {
             const addedToy = req.body;
             console.log(addedToy)
